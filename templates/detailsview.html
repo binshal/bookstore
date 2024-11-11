@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+
+
+    <h1 class="display-4">Book details</h1>
+
+    <div class="card" style="width: 18rem;">
+      <img src="{{ book.image.url }}" class="card-img-top" alt="...">
+      <div class="card-body">
+        <p class="card-text">{{book.title}} - ₹{{book.price}}</p>
+      </div>
+    </div>
+
+
+    <!-- <p class="lead ">
+        {{book.title}} -
+        {{book.price}}
+      </p> -->
+        
+   
+{% endblock %}
+    

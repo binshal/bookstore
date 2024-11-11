@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    {% for msg in messages %}
+    {{ msg }}
+    {% empty %}
+    No items found.
+    {% endfor %}
+
+    <h1>welcome</h1>
+    {% if user.is_authenticated %}
+   <p>logged in as</p> {{ user.username }}
+<br>
+<br>
+    <a href="{% url 'logout' %}">Logout</a>
+    {% endif %}
+</body>
+</html>

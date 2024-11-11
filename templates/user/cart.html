@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="{% static 'css/cart.css' %}" rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+      .col-md-4{
+    margin-right: 500px;
+    float: right;
+  }
+    </style>
+</head>
+<body>
+  {% if not cart_items %}
+  <p>Your cart is empty</p>
+  {% else %}
+
+  <section class="h-100">
+    <div class="container h-100 py-5">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-10">
+  
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-normal mb-0">Shopping Cart - {{total_items}} Items</h3>
+            <div>
+              <!-- <p class="mb-0"><span class="text-muted">Sort by:</span> <a href="#!" class="text-body">price <i
+                    class="fas fa-angle-down mt-1"></i></a></p> -->
+            </div>
+          </div>
+  
+        
+         
+          {% for item in cart_items %}
+          <div class="card rounded-3 mb-4">
+            <div class="card-body p-4">
+              <div class="row d-flex justify-content-between align-items-center">
+                <div class="col-md-2 col-lg-2 col-xl-2">
+                  <img
+                    src="{{ item.book.image.url }}"
+                    class="img-fluid rounded-3" alt="Book cover">
+                </div>
+                <div class="col-md-3 col-lg-3 col-xl-3">
+                  <p class="lead fw-normal mb-2">{{item.book.title}}</p>
+                  <p><span class="text-muted">Author: </span>{{item.book.author}}</p>
+                </div>
+
+                {% if item.quantity <= item.book.quantity %}
+                <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                  <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
+                    onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                    <a href="{% url 'decrease_quantity' item.id %}"><ion-icon name="remove-outline"></ion-icon></a>
+                  </button>
+  
+                  <input id="form1" min="0" name="quantity" value="{{ item.quantity }}" type="number"
+                    class="form-control form-control-sm" />
+                    <!-- <input type="number" name="quantity" value="{{ item.quantity }}"> -->
+  
+                  <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
+                    onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                    <a href="{% url 'increase_quantity' item.id %}"><ion-icon name="add-outline"></ion-icon></a>
+                  </button>
+                </div>
+                <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                  <h5 class="mb-0">₹{{item.book.price}}</h5> <br>
+                 
+                </div>
+                <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                  <a class="" href="{% url 'remove_cart' item.id %}"></a>
+                </div>
+
+                <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                  <a href="{% url 'remove_cart' item.id %}" class="btn btn-outline-danger"><i class="fas fa-trash fa-lg">Remove</i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+          {% endfor %}
+          
+  
+        </div>
+      </div>
+    </div>
+  </section>
+  {% endif %}
+    <form action="{% url 'create-checkout-session' %}" method="post">
+      {% csrf_token %}
+    <div class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-header py-3">
+          <h5 class="mb-0">Summary</h5>
+        </div>
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li
+              class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+              Total Products
+              <span>{{total_items}}items</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+              Shipping
+              <span>Gratis</span>
+            </li>
+            <li
+              class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+              <div>
+                <strong>Total amount</strong>
+                <strong>
+                  <p class="mb-0">(including VAT)</p>
+                </strong>
+              </div>
+              <span><strong>₹{{total_price}}</strong></span>
+            </li>
+          </ul>
+
+          <button  type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg btn-block">
+            Go to checkout
+          </button>
+        </div>
+      </div>
+    </div>
+      </form>
+
+
+<!-- {% if not cart_items %}-->
+<!-- <p>Your cart is empty</p>-->
+
+<!--    {% else %}-->
+
+<!-- <table class="table">-->
+<!--    <thead>-->
+<!--      <tr>-->
+<!--        <th scope="col">#</th>-->
+<!--        <th scope="col">Book Name</th>-->
+<!--        <th scope="col">Author</th>-->
+<!--        <th scope="col">Book Price</th>-->
+<!--        <th scope="col">Book Price</th>-->
+<!--      </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+<!--        {% for item in cart_items %}-->
+<!--      <tr>-->
+<!--        <th scope="row">1</th>-->
+<!--        <td>{{item.book.title}}</td>-->
+<!--        <td>{{item.book.author}}</td>-->
+<!--        <td>{{item.book.Price}}</td>-->
+<!--        <td><a href="{% url 'remove_cart' item.id %}">Remove</a></td>-->
+
+
+<!--          {% if item.quantity <= item.book.quantity %}-->
+
+<!--        <td><a href="{% url 'decrease_quantity' item.id %}">-</a></td>-->
+<!--        <td><input type="number" name="quantity" value="{{ item.quantity }}">Quantity</td>-->
+<!--        <td><a href="{% url 'increase_quantity' item.id %}">+</a></td>-->
+<!--      </tr>-->
+<!--        {% endif %}-->
+<!--        {% endfor %}-->
+<!--    </tbody>-->
+<!--  </table>-->
+
+
+<!-- {% endif %}-->
+
+
+
+
+
+</body>
+</html>
